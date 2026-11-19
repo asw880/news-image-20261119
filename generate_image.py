@@ -98,10 +98,7 @@ def tag(draw, x, y, label):
 
 # ---------------------------------------------------------------- heroes
 def draw_flags(draw, x, y, w):
-    """Three flag poles (US, China, Russia) on a table line."""
-    # poles
-    for i, cx in enumerate([x + w * 0.22, x + w * 0.5, x + w * 0.78]):
-        draw.line([cx, y, cx, y + 62], fill=(60, 60, 60), width=3)
+    """Three flags hanging on the wall behind the table (no poles)."""
     # US flag (stripes + blue canton)
     fx, fy = x + w * 0.22 - 26, y + 2
     for s in range(7):
@@ -120,16 +117,26 @@ def draw_flags(draw, x, y, w):
 
 
 def draw_table(draw, x, y, w, h):
-    """Round summit table with three seated figures."""
-    draw.ellipse([x + 10, y + h - 42, x + w - 10, y + h - 6], fill=(196, 141, 90))
-    draw.ellipse([x + 10, y + h - 42, x + w - 10, y + h - 24],
-                 fill=(222, 178, 120))
+    """Three seated figures in suits behind a conference table."""
+    # figures (heads + torsos; the table covers their lower half)
     for i, cx in enumerate([x + w * 0.22, x + w * 0.5, x + w * 0.78]):
         suit = [NAVY, (40, 40, 40), (90, 30, 30)][i]
-        draw.ellipse([cx - 13, y + 8, cx + 13, y + 34], fill=(232, 190, 160))
-        draw.rectangle([cx - 20, y + 34, cx + 20, y + 62], fill=suit)
-        draw.polygon([(cx - 6, y + 34), (cx, y + 46), (cx + 6, y + 34)],
+        tie = [RED, GOLD, NAVY][i]
+        draw.ellipse([cx - 11, y + 8, cx + 11, y + 30], fill=(232, 190, 160))
+        draw.rectangle([cx - 18, y + 30, cx + 18, y + 62], fill=suit)
+        draw.polygon([(cx - 5, y + 30), (cx + 5, y + 30), (cx, y + 42)],
                      fill=WHITE)
+        draw.rectangle([cx - 2, y + 32, cx + 2, y + 50], fill=tie)
+    # table: trapezoid top surface + front face
+    draw.polygon([(x + 8, y + 58), (x + w - 8, y + 58),
+                  (x + w - 2, y + h), (x + 2, y + h)], fill=(196, 141, 90))
+    draw.polygon([(x + 8, y + 58), (x + w - 8, y + 58),
+                  (x + w - 14, y + 66), (x + 14, y + 66)], fill=(222, 178, 120))
+    # name plates + microphones on the table
+    for cx in [x + w * 0.22, x + w * 0.5, x + w * 0.78]:
+        draw.rectangle([cx - 14, y + 60, cx + 14, y + 68], fill=WHITE)
+        draw.line([cx + 18, y + 60, cx + 24, y + 50], fill=INK, width=2)
+        draw.ellipse([cx + 22, y + 47, cx + 27, y + 52], fill=INK)
 
 
 def draw_skyline(draw, x, y, w, h):
@@ -213,7 +220,7 @@ STATS = [
     ("$81.3bn", "raised by Anthropic,\na record IPO"),
     ("13 yrs", "wait for GTA VI ends\nat midnight"),
     ("551,864", "sit South Korea's\ncollege exam"),
-    ("200,000", "told to move ahead\nof Cyclone Akvan"),
+    ("200,000", "listed to evacuate\nas Cyclone Akvan nears"),
     ("730,000", "Rohingya who fled\nMyanmar in 2017"),
 ]
 sx = MX
@@ -265,21 +272,21 @@ hw = 320
 for hero in HEROES:
     # illustration
     if hero["art"] == "shenzhen":
-        d.rectangle([hx, 214, hx + hw, 314], fill=(168, 205, 232))
+        d.rectangle([hx, 214, hx + hw, 312], fill=(168, 205, 232))
         draw_flags(d, hx + 20, 216, hw - 40)
-        draw_table(d, hx + 20, 238, hw - 40, 76)
+        draw_table(d, hx + 20, 238, hw - 40, 74)
     elif hero["art"] == "gta":
-        draw_skyline(d, hx, 214, hw, 100)
+        draw_skyline(d, hx, 214, hw, 98)
     else:
-        draw_chart(d, hx, 214, hw, 100)
+        draw_chart(d, hx, 214, hw, 98)
     # number badge
     d.ellipse([hx + 4, 214, hx + 26, 236], fill=RED)
     d.text((hx + 11, 218), hero["num"], font=F(SANS_B, 13), fill=WHITE)
     # kicker + tag
-    d.text((hx, 318), hero["kicker"], font=F(SANS_B, 10), fill=RED)
-    tag(d, hx + hw - 62, 318, hero["tag"])
+    d.text((hx, 316), hero["kicker"], font=F(SANS_B, 10), fill=RED)
+    tag(d, hx + hw - 62, 316, hero["tag"])
     # headline + deck
-    y = draw_wrapped(d, hx, 332, hero["head"], F(SERIF_B, 18), INK, hw, 21,
+    y = draw_wrapped(d, hx, 330, hero["head"], F(SERIF_B, 19), INK, hw, 22,
                      max_lines=2)
     draw_wrapped(d, hx, y + 2, hero["deck"], F(SANS, 11), INK, hw, 13,
                  max_lines=2)
@@ -302,10 +309,16 @@ def icon_globe(draw, x, y, w, h):
     draw.rectangle([x, y, x + w, y + h], fill=(200, 228, 240))
     draw.ellipse([x + w // 2 - 16, y + 6, x + w // 2 + 16, y + h - 6],
                  outline=BLUE, width=2, fill=(190, 225, 245))
-    draw.ellipse([x + w // 2 - 8, y + 12, x + w // 2 + 6, y + h - 16],
-                 fill=(60, 140, 90))
+    # meridians + equator
+    draw.arc([x + w // 2 - 8, y + 6, x + w // 2 + 8, y + h - 6], 0, 360,
+             fill=BLUE, width=1)
     draw.line([x + w // 2 - 16, y + h // 2, x + w // 2 + 16, y + h // 2],
               fill=BLUE, width=1)
+    # landmass
+    draw.ellipse([x + w // 2 - 10, y + 12, x + w // 2 + 2, y + 24],
+                 fill=(60, 140, 90))
+    draw.ellipse([x + w // 2 - 2, y + 28, x + w // 2 + 10, y + h - 12],
+                 fill=(60, 140, 90))
 
 
 def icon_cyclone(draw, x, y, w, h):
@@ -388,14 +401,14 @@ def icon_chart(draw, x, y, w, h):
 
 MID = [
     dict(num="4", kicker="THE HAGUE  •  LAW", tag="REPORTED", icon="court",
-         head="World Court rules Myanmar committed genocide",
-         deck="ICJ judges 9-6: the 2017 campaign meant to destroy the Rohingya. About 10,000 were killed; Myanmar must allow return and pay reparations."),
+         head="World Court rules 9–6: Myanmar committed genocide",
+         deck="The 2017 campaign meant to destroy the Rohingya; about 10,000 were killed. Myanmar must allow return."),
     dict(num="5", kicker="ANTALYA  •  CLIMATE", tag="FORECAST", icon="globe",
          head="COP31 enters its last 48 hours",
          deck="Ministers take over the text in Antalya. The $120bn adaptation-finance goal and a fossil-fuel phase-out are still unresolved."),
     dict(num="6", kicker="ODISHA  •  STORM", tag="REPORTED", icon="cyclone",
          head="Cyclone Akvan bears down; 200,000 told to move",
-         deck="Red alerts in 11 districts; nearly 50,000 evacuated. Landfall near Puri is due Friday, with winds near 110 km/h."),
+         deck="Red alerts in 11 districts; nearly 50,000 evacuated. Landfall near Puri due Friday."),
     dict(num="7", kicker="SEOUL  •  EDUCATION", tag="REPORTED", icon="exam",
          head="Half a million sit Korea's Suneung",
          deck="551,864 take the college exam; flights pause for the listening test amid an AI-cheating crackdown."),
@@ -404,7 +417,7 @@ MID = [
          deck="The rail section was targeted overnight and traffic halted, Russian-installed officials said."),
     dict(num="9", kicker="GAZA  •  WAR", tag="REPORTED", icon="tank",
          head="Israeli armour pushes into central Gaza",
-         deck="Tanks and bulldozers move toward Salah al-Din Street, past the Yellow Line. Hamas calls it a ceasefire breach."),
+         deck="Tanks and bulldozers move toward Salah al-Din Street, past the Yellow Line. Hamas calls it a breach."),
     dict(num="10", kicker="FLORIDA  •  WEATHER", tag="REPORTED", icon="rain",
          head="Flooded South Florida logs 300+ rescues",
          deck="Up to 15.3 inches of rain fell in a day; Broward closed schools a second day as more rain is forecast."),
@@ -478,13 +491,13 @@ d.text((MX, 910), "Red pins: stories 1–13. Grey pins: briefs below.",
 
 # ALSO briefs (24 one-liners, stories 14-37)
 BRIEFS = [
-    ("14", "KYIV", "Ukraine left off the agenda in Shenzhen."),
+    ("14", "KYIV", "Zelensky: 'No talks about Ukraine without Ukraine.'"),
     ("15", "PARIS", "Mélenchon could win, minister concedes."),
     ("16", "JAZAN", "Saudi all-clear after Houthi alerts."),
     ("17", "BENGHAZI", "Cocaine and pills seized in Libya's biggest haul."),
-    ("18", "MEXICO CITY", "Banxico cuts rates to 6.25% on a 3-2 vote."),
+    ("18", "MEXICO CITY", "Banxico minutes: 3-2 vote to cut rates to 6.25%."),
     ("19", "MOGADISHU", "Somalia accuses the UAE of secret military bases."),
-    ("20", "FRANKFURT", "Deutsche Bank handled $582m in Epstein deals."),
+    ("20", "FRANKFURT", "Deutsche Bank's $582m Epstein-linked deals."),
     ("21", "WASHINGTON", "Senators warn of AI cyber threats at a hearing."),
     ("22", "OTTAWA", "Carney reviews China trade for a US deal."),
     ("23", "NEW DELHI", "Modi meets the Prince and Princess of Wales."),
@@ -496,11 +509,11 @@ BRIEFS = [
     ("29", "MANAMA", "Bapco refinery back on its feet after the attacks."),
     ("30", "RIYADH", "Gulf leaders urge Trump not to strike Iran."),
     ("31", "LA PAZ", "Bolivia declares an El Niño emergency."),
-    ("32", "CEBU", "Indonesia probes a refinery blast that killed one."),
+    ("32", "AUCKLAND", "First to play GTA VI at midnight."),
     ("33", "PYONGYANG", "North Korea shows off an AI chatbot."),
     ("34", "DHAKA", "Yunus home burned; violence in 28 districts."),
-    ("35", "LISBON", "Games Week opens on GTA VI launch day."),
-    ("36", "BRUSSELS", "UK and EU leaders hold their summit."),
+    ("35", "SACRAMENTO", "California braces for an atmospheric river."),
+    ("36", "WASHINGTON", "Vance: no 'forever war' in the Gulf."),
     ("37", "KUALA LUMPUR", "Malaysia ends visa-free entry for Indians."),
 ]
 d.text((312, 694), "ALSO ON THURSDAY 19 NOVEMBER — 24 MORE STORIES",
