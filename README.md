@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/news-image-20261119/asw880/news-image-20261119/rank.svg)](https://make.fun/bounty/news-image-20261119/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
 [![reward](https://make.fun/badge/news-image-20261119/asw880/news-image-20261119/reward.svg)](https://make.fun/bounty/news-image-20261119?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
 
-One-image front page summing up Thursday 19 November 2026 world news: Trump, Xi and Putin meet in Shenzhen, the ICJ Rohingya ruling, the Crimean Bridge strike, the Gulf / Hormuz crisis, COP31 in Antalya, turmoil in Bangladesh, and the Anthropic IPO record.
+One-image front page summing up Thursday 19 November 2026 world news in 37 stories across 7 regions: the Trump–Xi–Putin summit in Shenzhen, GTA VI's midnight launch after a 13-year wait, the Anthropic IPO record, the ICJ Rohingya genocide ruling, Cyclone Akvan, South Korea's Suneung exam, the Crimean Bridge strike, COP31 in Antalya, the Gaza push, Florida's floods, Indonesia's asset-seizure law, Colombia's national strike and Australia's 4.9% jobless rate — plus a world map, 24 more briefs, and a DATE CHECK box that throws out stories from earlier days.
 
 ## Run it
 
